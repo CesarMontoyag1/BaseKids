@@ -267,7 +267,7 @@ app.post('/buscarUsuario', (req, res) => {
 });
 
 app.listen(3000, () => {
-    console.log(`Servidor escuchando en http://localhost:${3000}`);
+    console.log("Servidor corriendo en http://localhost:3000/inicio.html");
 });
 app.listen(3000, () => {
     console.log('Server is running on port 3000');
