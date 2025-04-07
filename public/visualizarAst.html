@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visualizar Asistencia - BaseKids</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to right, #5de0e6, #004aad);
+            color: white;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+        }
+
+        header {
+            background: transparent;
+            color: white;
+            padding: 10px 20px;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 60px; /* Ajusta según necesites */
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .header-left span {
+            font-size: 32px; /* Aumenta el tamaño de la fuente */
+            margin-left: 25px; /* Ajusta el margen izquierdo si es necesario */
+        }
+
+        .header-left img {
+            width: 20px;
+            margin-right: 10px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .header-right button {
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            margin-right: 20px;
+        }
+
+        .header-right button img {
+            width: 24px;
+            height: 24px;
+            position: relative;
+            left: 10px;
+        }
+
+        .header-right button.usuario {
+            border: 2px solid white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            color: white;
+            position: relative;
+        }
+
+        .divider {
+            width: 100%;
+            height: 2px;
+            background-color: white;
+            position: absolute;
+            top: 60px;
+            left: 0;
+            z-index: 1;
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            width: 100%;
+            padding-top: 20px;
+        }
+
+        .search-container {
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 20px;
+            width: 80%;
+            max-width: 600px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .search-container div {
+            display: flex;
+            flex-direction: column;
+            width: 30%;
+        }
+
+        .search-container label {
+            margin-bottom: 5px;
+            color: white;
+            font-weight: bold;
+        }
+
+        .search-container input[type="date"],
+        .search-container select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            color: black;
+        }
+
+        .search-container button {
+            background-color: #004aad;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .results-container {
+            width: 80%;
+            max-width: 600px;
+            text-align: left;
+        }
+
+        .logo {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            width: 150px;
+        }
+
+        .back-button {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            font-size: 20px; /* Aumenta el tamaño del botón */
+        }
+
+        .back-button img {
+            width: 40px; /* Aumenta el tamaño de la imagen */
+            margin-right: 0px;
+            margin-left: 15px;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="header-left">
+        <button class="back-button">
+            <img src="img/Volver.png" alt="Atrás">
+        </button>
+        <span>Visualizar Asistencia</span>
+    </div>
+    <div class="header-right">
+        <button><img src="img/CampanaSinNotificacion.png" alt="Notificación"></button>
+        <button class="usuario">Usuario</button>
+    </div>
+</header>
+
+<div class="divider"></div>
+
+<section class="main-content">
+    <div class="search-container">
+        <div>
+            <label for="fecha">Fecha</label>
+            <input type="date" id="fecha" placeholder="Fecha">
+        </div>
+        <div>
+            <label for="institucion">Institución</label>
+            <select id="institucion">
+                <option value="">Seleccionar Institución</option>
+                <option value="institucion1">Institución 1</option>
+                <option value="institucion2">Institución 2</option>
+            </select>
+        </div>
+        <button onclick="buscarAsistencia()">Buscar</button>
+    </div>
+    <div class="results-container">
+        <h2>Resultados:</h2>
+        <div id="resultados">
+        </div>
+    </div>
+</section>
+
+<img src="img/logoFundacionBlanco.png" alt="Logo Fundación" class="logo">
+
+<script>
+    function buscarAsistencia() {
+        const fecha = document.getElementById('fecha').value;
+        const institucion = document.getElementById('institucion').value;
+        // Aquí puedes agregar la lógica para buscar la asistencia
+        // y mostrar los resultados en el div con id "resultados".
+        const resultadosDiv = document.getElementById('resultados');
+        resultadosDiv.innerHTML = `<p>Resultados para la fecha: ${fecha} y la institución: ${institucion}</p>`;
+        // Ejemplo de resultados (reemplaza con tu lógica):
+        resultadosDiv.innerHTML += `
+                <p>Estudiante 1: Presente</p>
+                <p>Estudiante 2: Ausente</p>
+                <p>Estudiante 3: Presente</p>
+            `;
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BaseKids - Profesor</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to right, #5de0e6, #004aad);
+            color: white;
+            overflow: hidden; /* Evita el scroll */
+        }
+
+        .container {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background: transparent;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 60px; /* Ajusta según necesites */
+        }
+
+        .header-left {
+            font-size: 30px;
+            font-weight: bold;
+            position: relative;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+
+        .header-right button {
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        .header-right button img {
+            width: 24px;
+            height: 24px;
+        }
+
+        .header-right button.usuario {
+            border: 2px solid white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            color: white;
+            position: relative;
+        }
+
+        .dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background-color: white;
+            color: black;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+        .dropdown a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown a:hover {
+            background-color: #ddd;
+        }
+
+        .divider {
+            width: 100%;
+            height: 2px;
+            background-color: white;
+            position: absolute;
+            top: 60px;
+            left: 0;
+            z-index: 1;
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            justify-content: space-between; /* Alinea a la izquierda */
+            align-items: center;
+            padding-top: 20px;
+            padding-left: 20px; /* Ajusta el padding */
+        }
+
+        .main-content h1 {
+            font-size: 2em;
+            margin-bottom: -37px;
+            transform: translateY(-430px) translateX(315px); /* Mueve el título 1000px a la izquierda */
+        }
+
+        .hexagon-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 150px);
+            grid-gap: 0;
+            justify-content: flex-start; /* Alinea a la izquierda */
+            align-items: center;
+            position: relative;
+            top: 50px;
+            left: -80px;
+
+        }
+
+        .hexagon {
+            width: 170px;
+            height: 145px;
+            background-color: #048197;
+            clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            flex-direction: column;
+            padding: 15px;
+        }
+
+        /* Ajuste preciso de las posiciones de los hexágonos */
+        .hexagon:nth-child(1) {
+            grid-column: 2;
+            grid-row: 2;
+            transform: translateY(-55px) translateX(-2.5px);
+        }
+
+        .hexagon:nth-child(2) {
+            grid-column: 3;
+            grid-row: 2;
+            transform: translateY(32px) translateX(-1px);
+        }
+
+        .hexagon:nth-child(3) {
+            grid-column: 1;
+            grid-row: 3;
+            transform: translateY(-142px) translateX(-4px);
+        }
+
+        .hexagon:nth-child(4) {
+            grid-column: 2;
+            grid-row: 4;
+            transform: translateY(-230px) translateX(-2.5px);
+        }
+
+
+        .logo {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            width: 150px;
+        }
+
+        .carousel {
+            position: relative;
+            width: calc(100% - 700px); /* Ajusta el ancho para que no tenga margen */
+            height: calc(100% - 125px); /* Ajusta la altura para que no tenga margen */
+            overflow: hidden;
+            clip-path: polygon(20% 0%, 100% 0%, 100% 100%, 10% 100%, 0% 50%);
+            left: 0px;
+            top: -80px;
+        }
+
+        .carousel-inner {
+            display: flex;
+            transition: transform 0.5s ease;
+            height: 100%;
+        }
+
+        .carousel-item {
+            min-width: 100%;
+            box-sizing: border-box;
+        }
+
+        .carousel img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .carousel-control {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            z-index: 2; /* Asegura que las flechas estén por encima de las imágenes */
+        }
+
+        .carousel-control.prev {
+            left: 10px;
+        }
+
+        .carousel-control.next {
+            right: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <div class="header-left">Profesor</div>
+        <div class="header-right">
+            <button><img src="img/CampanaSinNotificacion.png" alt="Notificación"></button>
+            <button class="usuario" onclick="toggleDropdown()">Usuario</button>
+            <div class="dropdown" id="dropdownMenu">
+                <a href="#">Perfil</a>
+                <a href="#">Cerrar sesión</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="divider"></div>
+
+    <section class="main-content">
+        <h1>¡Bienvenido!</h1>
+        <div class="hexagon-grid">
+            <div class="hexagon" onclick="window.location.href='visualizarAst.html'">VISUALIZAR ASISTENCIA</div>
+            <div class="hexagon" onclick="window.location.href='analisisDatos.html'">ANALISIS DE DATOS</div>
+            <div class="hexagon" onclick="window.location.href='tomarAsistencia.html'">TOMAR ASISTENCIA</div>
+            <div class="hexagon" onclick="window.location.href='visualizarEst.html'">VISUALIZAR ESTUDIANTE</div>
+        </div>
+        <div class="carousel">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img src="img/MenuJamesNiñas.jpg" alt="Imagen 1">
+                </div>
+                <div class="carousel-item">
+                    <img src="img/MenuNiñosjpg.jpg" alt="Imagen 2">
+                </div>
+                <div class="carousel-item">
+                    <img src="img/MenuFutbolNiños.jpg" alt="Imagen 3">
+                </div>
+            </div>
+            <button class="carousel-control prev" onclick="prevSlide()">&#10094;</button>
+            <button class="carousel-control next" onclick="nextSlide()">&#10095;</button>
+        </div>
+    </section>
+
+    <img src="img/logoFundacionBlanco.png" alt="Logo Fundación" class="logo">
+</div>
+
+<script>
+    function toggleDropdown() {
+        var dropdown = document.getElementById('dropdownMenu');
+        if (dropdown.style.display === 'block') {
+            dropdown.style.display = 'none';
+        } else {
+            dropdown.style.display = 'block';
+        }
+    }
+
+    document.addEventListener('click', function(event) {
+        var dropdown = document.getElementById('dropdownMenu');
+        var button = document.querySelector('.header-right .usuario');
+        if (!dropdown.contains(event.target) && !button.contains(event.target)) {
+            dropdown.style.display = 'none';
+        }
+    });
+
+    document.addEventListener('wheel', function(event) {
+        if (event.ctrlKey) {
+            event.preventDefault(); // Previene el zoom con Control + scroll
+        }
+    }, { passive: false });
+
+    document.addEventListener('keydown', function(event) {
+        if (event.ctrlKey && (event.key === '+' || event.key === '=' || event.key === '-')) {
+            event.preventDefault();
+        }
+    });
+
+    let currentIndex = 0;
+
+    function showSlide(index) {
+        const slides = document.querySelectorAll('.carousel-item');
+        if (index >= slides.length) {
+            currentIndex = 0;
+        } else if (index < 0) {
+            currentIndex = slides.length - 1;
+        } else {
+            currentIndex = index;
+        }
+        const offset = -currentIndex * 100;
+        document.querySelector('.carousel-inner').style.transform = `translateX(${offset}%)`;
+    }
+
+    function nextSlide() {
+        showSlide(currentIndex + 1);
+    }
+
+    function prevSlide() {
+        showSlide(currentIndex - 1);
+    }
+
+    // Mueve las imágenes automáticamente cada 7 segundos
+    setInterval(nextSlide, 7000);
+</script>
+</body>
+</html>

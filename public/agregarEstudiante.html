@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Buscar Estudiante - BaseKids</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to right, #5de0e6, #004aad);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    header {
+      background: transparent;
+      color: white;
+      padding: 10px 20px;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 60px;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .header-left span {
+      font-size: 32px;
+      margin-left: 25px;
+    }
+
+    .header-left img {
+      width: 20px;
+      margin-right: 10px;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      position: relative;
+      margin-bottom: 20px;
+    }
+
+    .header-right button {
+      background-color: transparent;
+      border: none;
+      cursor: pointer;
+      margin-right: 20px;
+    }
+
+    .header-right button img {
+      width: 24px;
+      height: 24px;
+      position: relative;
+      left: 10px;
+    }
+
+    .header-right button.usuario {
+      border: 2px solid white;
+      padding: 10px 20px;
+      border-radius: 5px;
+      color: white;
+      position: relative;
+    }
+
+    .dropdown {
+      display: none;
+      position: absolute;
+      top: 100%;
+      right: 0;
+      background-color: white;
+      color: black;
+      min-width: 160px;
+      box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+      z-index: 1;
+    }
+
+    .dropdown a {
+      color: black;
+      padding: 12px 16px;
+      text-decoration: none;
+      display: block;
+    }
+
+    .dropdown a:hover {
+      background-color: #ddd;
+    }
+
+    .divider {
+      width: 100%;
+      height: 2px;
+      background-color: white;
+      position: absolute;
+      top: 60px;
+      left: 0;
+      z-index: 1;
+    }
+
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      width: 100%;
+      padding-top: 20px;
+      overflow-y: auto;
+    }
+
+    .form-container {
+      background-color: rgba(255, 255, 255, 0.8);
+      border-radius: 10px;
+      padding: 20px;
+      width: 80%;
+      max-width: 1000px;
+      text-align: center;
+      overflow-y: auto;
+      max-height: 80vh;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .form-grid input, .form-grid select {
+      width: calc(100% - 22px);
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-sizing: border-box;
+    }
+
+    .form-grid label {
+      text-align: left;
+      margin-bottom: 5px;
+      color: #333;
+      font-weight: bold;
+    }
+
+    .form-container button {
+      background-color: #004aad;
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      width: 100%;
+      font-size: 16px;
+    }
+
+    .form-container::-webkit-scrollbar {
+      width: 12px;
+      height: 12px;
+    }
+
+    .form-container::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 10px;
+    }
+
+    .form-container::-webkit-scrollbar-thumb {
+      background: linear-gradient(45deg, #007bff, #00d4ff);
+      border-radius: 10px;
+      border: 3px solid #f1f1f1;
+    }
+
+    .form-container::-webkit-scrollbar-thumb:hover {
+      background: linear-gradient(45deg, #0056b3, #00a3cc);
+    }
+
+    .logo {
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      width: 150px;
+    }
+
+    .back-button {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      font-size: 20px;
+    }
+
+    .back-button img {
+      width: 40px;
+      margin-right: 0px;
+      margin-left: 15px;
+    }
+
+    #genero {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #genero label {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <button class="back-button">
+      <img src="img/Volver.png" alt="Atrás">
+    </button>
+    <span>Buscar Estudiante</span>
+  </div>
+  <div class="header-right">
+    <button><img src="img/CampanaSinNotificacion.png" alt="Notificación"></button>
+    <button class="usuario" onclick="toggleDropdown()">Usuario</button>
+    <div class="dropdown" id="dropdownMenu">
+      <a href="#">Perfil</a>
+      <a href="#">Cerrar sesión</a>
+    </div>
+  </div>
+</header>
+
+<div class="divider"></div>
+
+<section class="main-content">
+  <div class="form-container">
+    <div class="form-grid">
+      <!-- Campos del formulario -->
+      <div>
+        <label for="numDoc">N° de Documento</label>
+        <input type="text" id="numDoc" name="numDoc">
+      </div>
+      <div>
+        <label for="tipoDoc">Tipo Doc</label>
+        <select id="tipoDoc" name="tipoDoc">
+          <option value="CC">C.C.</option>
+          <option value="TI">T.I.</option>
+          <option value="RC">R.C.</option>
+          <option value="CE">C.E.</option>
+          <option value="NUIP">NUIP</option>
+          <option value="PASAPORTE">PASAPORTE</option>
+          <option value="NIT">NIT</option>
+          <option value="CARNE_DIPLOMATICO">CARNE DIPLOMÁTICO</option>
+          <option value="PEP">PERMISO ESPECIAL DE PERMANENCIA (P.E.P)</option>
+          <option value="CERTIFICADO_CABILDO">CERTIFICADO CABILDO</option>
+          <option value="NES">NES</option>
+          <option value="TMF">TARJETA DE MOVILIDAD FRONTERIZA (TMF)</option>
+          <option value="VISA">VISA</option>
+          <option value="ID_EXTRANJEROS">ID EXTRANJEROS DIFERENTE A LA CÉDULA DE EXTRANJERÍA</option>
+        </select>
+      </div>
+      <div>
+        <label for="primerNombre">Primer nombre del estudiante</label>
+        <input type="text" id="primerNombre" name="primerNombre">
+      </div>
+      <div>
+        <label for="segundoNombre">Segundo Nombre del estudiante</label>
+        <input type="text" id="segundoNombre" name="segundoNombre">
+      </div>
+      <div>
+        <label for="primerApellido">Primer apellido del estudiante</label>
+        <input type="text" id="primerApellido" name="primerApellido">
+      </div>
+      <div>
+        <label for="segundoApellido">Segundo apellido del estudiante</label>
+        <input type="text" id="segundoApellido" name="segundoApellido">
+      </div>
+      <div>
+        <label for="genero">Género</label>
+        <div id="genero">
+          <label><input type="radio" name="genero" value="M"> M</label>
+          <label><input type="radio" name="genero" value="F"> F</label>
+        </div>
+      </div>
+      <div>
+        <label for="fechaNacimiento">Fecha de Nacimiento</label>
+        <input type="date" id="fechaNacimiento" name="fechaNacimiento">
+      </div>
+      <div>
+        <label for="estadoCivil">Estado Civil</label>
+        <input type="text" id="estadoCivil" name="estadoCivil">
+      </div>
+      <div>
+        <label for="grupoEtnico">Grupo étnico </label>
+        <input type="text" id="grupoEtnico" name="grupoEtnico">
+      </div>
+      <div>
+        <label for="factorVulnerabilidad">Factor de vulnerabilidad</label>
+        <input type="text" id="factorVulnerabilidad" name="factorVulnerabilidad">
+      </div>
+      <div>
+        <label for="paisNacimiento">País de nacimiento</label>
+        <input type="text" id="paisNacimiento" name="paisNacimiento">
+      </div>
+      <div>
+        <label for="municipioNacimiento">Municipio de nacimiento</label>
+        <input type="text" id="municipioNacimiento" name="municipioNacimiento">
+      </div>
+      <div>
+        <label for="municipioResidencia">Municipio de residencia</label>
+        <input type="text" id="municipioResidencia" name="municipioResidencia">
+      </div>
+      <div>
+        <label for="direccionResidencia">Dirección de residencia</label>
+        <input type="text" id="direccionResidencia" name="direccionResidencia">
+      </div>
+      <div>
+        <label for="zonaEstudiante">Zona del estudiante</label>
+        <input type="text" id="zonaEstudiante" name="zonaEstudiante">
+      </div>
+      <div>
+        <label for="mundo">Mundo</label>
+        <input type="text" id="mundo" name="mundo">
+      </div>
+      <div>
+        <label for="modalidad">Modalidad</label>
+        <input type="text" id="modalidad" name="modalidad">
+      </div>
+      <div>
+        <label for="dias">Días</label>
+        <select id="dias" name="dias">
+          <option value="LU JU">LU JU</option>
+          <option value="LU MI">LU MI</option>
+          <option value="LU VI">LU VI</option>
+          <option value="MA JU">MA JU</option>
+          <option value="MA MI">MA MI</option>
+          <option value="MA VI">MA VI</option>
+          <option value="MI VI">MI VI</option>
+          <option value="SA">SA</option>
+        </select>
+      </div>
+      <div>
+        <label for="horarioInicio">Horario Inicio</label>
+        <input type="text" id="horarioInicio" name="horarioInicio">
+      </div>
+      <div>
+        <label for="horarioFin">Horario Fin</label>
+        <input type="text" id="horarioFin" name="horarioFin">
+      </div>
+      <div>
+        <label for="codigoDaneIE">Código DANE IE</label>
+        <input type="text" id="codigoDaneIE" name="codigoDaneIE">
+      </div>
+      <div>
+        <label for="subregionIE">Subregión IE</label>
+        <input type="text" id="subregionIE" name="subregionIE">
+      </div>
+      <div>
+        <label for="municipioIE">Municipio IE</label>
+        <input type="text" id="municipioIE" name="municipioIE">
+      </div>
+      <div>
+        <label for="institucionEducativa">Institución Educativa</label>
+        <input type="text" id="institucionEducativa" name="institucionEducativa">
+      </div>
+      <div>
+        <label for="codigoDaneSede">Código DANE Sede</label>
+        <input type="text" id="codigoDaneSede" name="codigoDaneSede">
+      </div>
+      <div>
+        <label for="sede">Sede</label>
+        <input type="text" id="sede" name="sede">
+      </div>
+      <div>
+        <label for="grado">Grado</label>
+        <input type="text" id="grado" name="grado">
+      </div>
+      <div>
+        <label for="jornada">Jornada</label>
+        <input type="text" id="jornada" name="jornada">
+      </div>
+      <div>
+        <label for="nit">NIT</label>
+        <input type="text" id="nit" name="nit">
+      </div>
+      <div>
+        <label for="proveedor">Proveedor</label>
+        <input type="text" id="proveedor" name="proveedor">
+      </div>
+    </div>
+    <button onclick="buscarEstudiante()">Buscar</button>
+  </div>
+</section>
+
+<img src="img/logoFundacionBlanco.png" alt="Logo Fundación" class="logo">
+
+<script>
+  function toggleDropdown() {
+    var dropdown = document.getElementById('dropdownMenu');
+    if (dropdown.style.display === 'block') {
+      dropdown.style.display = 'none';
+    } else {
+      dropdown.style.display = 'block';
+    }
+  }
+
+  document.addEventListener('click', function(event) {
+    var dropdown = document.getElementById('dropdownMenu');
+    var button = document.querySelector('.header-right .usuario');
+    if (!dropdown.contains(event.target) && !button.contains(event.target)) {
+      dropdown.style.display = 'none';
+    }
+  });
+
+  function buscarEstudiante() {
+    const numDoc = document.getElementById('numDoc').value;
+
+    fetch('/buscarEstudiante', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ numDoc })
+    })
+            .then(response => response.json())
+            .then(data => {
+              if (data) {
+                // Rellenar los campos del formulario con los datos del estudiante
+                document.getElementById('tipoDoc').value = data.tipoDoc;
+                document.getElementById('primerNombre').value = data.primerNombre;
+                document.getElementById('segundoNombre').value = data.segundoNombre;
+                document.getElementById('primerApellido').value = data.primerApellido;
+                document.getElementById('segundoApellido').value = data.segundoApellido;
+                document.querySelector(`input[name="genero"][value="${data.genero}"]`).checked = true;
+                document.getElementById('fechaNacimiento').value = data.fechaNacimiento;
+                document.getElementById('estadoCivil').value = data.estadoCivil;
+                document.getElementById('grupoEtnico').value = data.grupoEtnico;
+                document.getElementById('factorVulnerabilidad').value = data.factorVulnerabilidad;
+                document.getElementById('paisNacimiento').value = data.paisNacimiento;
+                document.getElementById('municipioNacimiento').value = data.municipioNacimiento;
+                document.getElementById('municipioResidencia').value = data.municipioResidencia;
+                document.getElementById('direccionResidencia').value = data.direccionResidencia;
+                document.getElementById('zonaEstudiante').value = data.zonaEstudiante;
+                document.getElementById('mundo').value = data.mundo;
+                document.getElementById('modalidad').value = data.modalidad;
+                document.getElementById('dias').value = data.dias;
+                document.getElementById('horarioInicio').value = data.horarioInicio;
+                document.getElementById('horarioFin').value = data.horarioFin;
+                document.getElementById('codigoDaneIE').value = data.codigoDaneIE;
+                document.getElementById('subregionIE').value = data.subregionIE;
+                document.getElementById('municipioIE').value = data.municipioIE;
+                document.getElementById('institucionEducativa').value = data.institucionEducativa;
+                document.getElementById('codigoDaneSede').value = data.codigoDaneSede;
+                document.getElementById('sede').value = data.sede;
+                document.getElementById('grado').value = data.grado;
+                document.getElementById('jornada').value = data.jornada;
+                document.getElementById('nit').value = data.nit;
+                document.getElementById('proveedor').value = data.proveedor;
+              } else {
+                alert('Estudiante no encontrado');
+              }
+            })
+            .catch(error => console.error('Error:', error));
+  }
+</script>
+</body>
+</html>

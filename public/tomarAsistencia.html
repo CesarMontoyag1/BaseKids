@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tomar Asistencia - BaseKids</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to right, #5de0e6, #004aad);
+      color: white;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      height: 100vh;
+    }
+
+    header {
+      background: transparent;
+      color: white;
+      padding: 10px 20px;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 60px;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .header-left span {
+      font-size: 32px;
+      margin-left: 25px;
+    }
+
+    .header-left img {
+      width: 20px;
+      margin-right: 10px;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      position: relative;
+      margin-bottom: 20px;
+    }
+
+    .header-right button {
+      background-color: transparent;
+      border: none;
+      cursor: pointer;
+      margin-right: 20px;
+    }
+
+    .header-right button img {
+      width: 24px;
+      height: 24px;
+      position: relative;
+      left: 10px;
+    }
+
+    .header-right button.usuario {
+      border: 2px solid white;
+      padding: 10px 20px;
+      border-radius: 5px;
+      color: white;
+      position: relative;
+    }
+
+    .dropdown {
+      display: none;
+      position: absolute;
+      top: 100%;
+      right: 0;
+      background-color: white;
+      color: black;
+      min-width: 160px;
+      box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+      z-index: 1;
+    }
+
+    .dropdown a {
+      color: black;
+      padding: 12px 16px;
+      text-decoration: none;
+      display: block;
+    }
+
+    .dropdown a:hover {
+      background-color: #ddd;
+    }
+
+    .divider {
+      width: 100%;
+      height: 2px;
+      background-color: white;
+      position: absolute;
+      top: 60px;
+      left: 0;
+      z-index: 1;
+    }
+
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      width: 100%;
+      padding-top: 20px;
+    }
+
+    .search-container {
+      background-color: rgba(255, 255, 255, 0.2);
+      border-radius: 10px;
+      padding: 20px;
+      width: 80%;
+      max-width: 600px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .search-container div {
+      display: flex;
+      flex-direction: column;
+      width: 20%;
+      margin-right: 20px; /* Añade margen derecho para separar los recuadros */
+    }
+
+    .search-container div:last-child {
+      margin-right: 0; /* Elimina el margen derecho del último elemento */
+    }
+
+    .search-container label {
+      margin-bottom: 5px;
+      color: white;
+      font-weight: bold;
+    }
+
+    .search-container input[type="date"],
+    .search-container select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-sizing: border-box;
+      color: black;
+    }
+
+    .search-container button {
+      background-color: #004aad;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .logo {
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      width: 150px;
+    }
+
+    .back-button {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      font-size: 20px;
+    }
+
+    .back-button img {
+      width: 40px;
+      margin-right: 0px;
+      margin-left: 15px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <button class="back-button">
+      <img src="img/Volver.png" alt="Atrás">
+    </button>
+    <span>Tomar Asistencia</span>
+  </div>
+  <div class="header-right">
+    <button><img src="img/CampanaSinNotificacion.png" alt="Notificación"></button>
+    <button class="usuario" onclick="toggleDropdown()">Usuario</button>
+    <div class="dropdown" id="dropdownMenu">
+      <a href="#">Perfil</a>
+      <a href="#">Cerrar sesión</a>
+    </div>
+  </div>
+</header>
+
+<div class="divider"></div>
+
+<section class="main-content">
+  <div class="search-container">
+    <div>
+      <label for="fecha">Fecha</label>
+      <input type="date" id="fecha" placeholder="Fecha">
+    </div>
+    <div>
+      <label for="institucion">Institución</label>
+      <select id="institucion">
+        <option value="">Seleccionar Institución</option>
+        <option value="institucion1">Institución 1</option>
+        <option value="institucion2">Institución 2</option>
+      </select>
+    </div>
+    <div>
+      <label for="modalidad">Modalidad</label>
+      <select id="modalidad">
+        <option value="">Seleccionar Modalidad</option>
+        <option value="modalidad1">Modalidad 1</option>
+        <option value="modalidad2">Modalidad 2</option>
+      </select>
+    </div>
+    <div>
+      <label for="dias">Días</label>
+      <select id="dias">
+        <option value="">Seleccionar Días</option>
+        <option value="lunes">Lunes</option>
+        <option value="martes">Martes</option>
+        <option value="miercoles">Miércoles</option>
+        <option value="jueves">Jueves</option>
+        <option value="viernes">Viernes</option>
+      </select>
+    </div>
+    <button onclick="buscarAsistencia()">Buscar</button>
+  </div>
+</section>
+
+<img src="img/logoFundacionBlanco.png" alt="Logo Fundación" class="logo">
+
+<script>
+  function toggleDropdown() {
+    var dropdown = document.getElementById('dropdownMenu');
+    if (dropdown.style.display === 'block') {
+      dropdown.style.display = 'none';
+    } else {
+      dropdown.style.display = 'block';
+    }
+  }
+
+  document.addEventListener('click', function(event) {
+    var dropdown = document.getElementById('dropdownMenu');
+    var button = document.querySelector('.header-right .usuario');
+    if (!dropdown.contains(event.target) && !button.contains(event.target)) {
+      dropdown.style.display = 'none';
+    }
+  });
+
+  function buscarAsistencia() {
+    const fecha = document.getElementById('fecha').value;
+    const institucion = document.getElementById('institucion').value;
+    const modalidad = document.getElementById('modalidad').value;
+    const dias = document.getElementById('dias').value;
+    // Aquí puedes agregar la lógica para buscar la asistencia
+    // con los criterios seleccionados.
+    alert(`Buscando asistencia para Fecha: ${fecha}, Institución: ${institucion}, Modalidad: ${modalidad}, Días: ${dias}`);
+  }
+</script>
+</body>
+</html>

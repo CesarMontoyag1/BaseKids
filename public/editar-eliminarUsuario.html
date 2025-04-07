@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar o Eliminar Usuario - BaseKids</title>
+    <style>
+        /* Estilos similares a los de editar-eliminarEstudiante.html */
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to right, #5de0e6, #004aad);
+            color: white;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+        }
+
+        header {
+            background: transparent;
+            color: white;
+            padding: 10px 20px;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 60px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .header-left span {
+            font-size: 32px;
+            margin-left: 25px;
+        }
+
+        .header-left img {
+            width: 20px;
+            margin-right: 10px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .header-right button {
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            margin-right: 20px;
+        }
+
+        .header-right button img {
+            width: 24px;
+            height: 24px;
+            position: relative;
+            left: 10px;
+        }
+
+        .header-right button.usuario {
+            border: 2px solid white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            color: white;
+            position: relative;
+        }
+
+        .dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background-color: white;
+            color: black;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+        .dropdown a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown a:hover {
+            background-color: #ddd;
+        }
+
+        .divider {
+            width: 100%;
+            height: 2px;
+            background-color: white;
+            position: absolute;
+            top: 60px;
+            left: 0;
+            z-index: 1;
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            width: 100%;
+            padding-top: 20px;
+            overflow-y: auto;
+        }
+
+        .search-container {
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 20px;
+            width: 80%;
+            max-width: 600px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .search-container input[type="text"] {
+            width: 60%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            color: black;
+        }
+
+        .search-container button {
+            background-color: #004aad;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .results-container {
+            width: 80%;
+            max-width: 600px;
+            text-align: left;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            padding: 20px;
+            overflow-y: auto;
+            max-height: 60vh;
+            display: none; /* Ocultar inicialmente */
+            color: black; /* Cambiar el color de la letra a negro */
+        }
+
+        .logo {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            width: 150px;
+        }
+
+        .back-button {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            font-size: 20px;
+        }
+
+        .back-button img {
+            width: 40px;
+            margin-right: 0px;
+            margin-left: 15px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        form label {
+            margin-top: 10px;
+        }
+
+        form input {
+            padding: 5px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            color: black;
+        }
+
+        form button {
+            margin-top: 20px;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .editar {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .eliminar {
+            background-color: #dc3545;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="header-left">
+        <button class="back-button">
+            <img src="img/Volver.png" alt="Atrás">
+        </button>
+        <span>Editar o Eliminar Usuario</span>
+    </div>
+    <div class="header-right">
+        <button><img src="img/CampanaSinNotificacion.png" alt="Notificación"></button>
+        <button class="usuario" onclick="toggleDropdown()">Usuario</button>
+        <div class="dropdown" id="dropdownMenu">
+            <a href="#">Perfil</a>
+            <a href="#">Cerrar sesión</a>
+        </div>
+    </div>
+</header>
+
+<div class="divider"></div>
+
+<section class="main-content">
+    <div class="search-container">
+        <input type="text" id="documento" placeholder="Ingrese documento de identidad">
+        <button onclick="buscarUsuario()">Buscar</button>
+    </div>
+    <div class="results-container" id="resultsContainer">
+        <h2>Resultados:</h2>
+        <div id="resultados">
+        </div>
+    </div>
+</section>
+
+<img src="img/logoFundacionBlanco.png" alt="Logo Fundación" class="logo">
+
+<script>
+    function toggleDropdown() {
+        var dropdown = document.getElementById('dropdownMenu');
+        if (dropdown.style.display === 'block') {
+            dropdown.style.display = 'none';
+        } else {
+            dropdown.style.display = 'block';
+        }
+    }
+
+    document.addEventListener('click', function(event) {
+        var dropdown = document.getElementById('dropdownMenu');
+        var button = document.querySelector('.header-right .usuario');
+        if (!dropdown.contains(event.target) && !button.contains(event.target)) {
+            dropdown.style.display = 'none';
+        }
+    });
+
+    function buscarUsuario() {
+        const documento = document.getElementById('documento').value;
+        fetch('/buscarUsuario', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ documento })
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data) {
+                    mostrarDatosUsuario(data);
+                    document.getElementById('resultsContainer').style.display = 'block'; // Mostrar el contenedor de resultados
+                } else {
+                    alert('Usuario no encontrado');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    function mostrarDatosUsuario(usuario) {
+        const resultadosDiv = document.getElementById('resultados');
+        resultadosDiv.innerHTML = `
+            <form id="formUsuario">
+                <label>Documento:</label>
+                <input type="text" id="numDoc" value="${usuario.numDoc}" readonly>
+                <label>Tipo de Documento:</label>
+                <input type="text" id="tipoDoc" value="${usuario.tipoDoc}">
+                <label>Nombre:</label>
+                <input type="text" id="nombre" value="${usuario.nombre}">
+                <label>Apellido:</label>
+                <input type="text" id="apellido" value="${usuario.apellido}">
+                <label>Username:</label>
+                <input type="text" id="username" value="${usuario.username}">
+                <label>Email:</label>
+                <input type="email" id="email" value="${usuario.email}">
+                <label>Password:</label>
+                <input type="password" id="password" value="${usuario.password}">
+                <label>Rol:</label>
+                <input type="text" id="rol" value="${usuario.rol}">
+                <button type="button" class="editar" onclick="editarUsuario('${usuario.numDoc}')">Editar</button>
+                <button type="button" class="eliminar" onclick="eliminarUsuario('${usuario.numDoc}')">Eliminar</button>
+            </form>
+        `;
+    }
+
+    function editarUsuario(numDoc) {
+        const datos = {
+            numDoc,
+            tipoDoc: document.getElementById('tipoDoc').value,
+            nombre: document.getElementById('nombre').value,
+            apellido: document.getElementById('apellido').value,
+            username: document.getElementById('username').value,
+            email: document.getElementById('email').value,
+            password: document.getElementById('password').value,
+            rol: document.getElementById('rol').value,
+        };
+
+        fetch('/editarUsuario', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(datos)
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Usuario editado exitosamente');
+                } else {
+                    alert('Error al editar usuario: ' + (data.message || 'Respuesta inesperada del servidor'));
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error al editar usuario: ' + error.message);
+            });
+    }
+
+    function eliminarUsuario(numDoc) {
+        fetch('/eliminarUsuario', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ numDoc })
+        })
+            .then(response => {
+                if (!response.ok) {
+                    return response.text().then(text => { throw new Error(text); });
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    alert('Usuario eliminado exitosamente');
+                    location.reload();
+                } else {
+                    alert('Error al eliminar usuario: ' + (data.message || 'Respuesta inesperada del servidor'));
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error al eliminar usuario: ' + error.message);
+            });
+    }
+</script>
+</body>
+</html>
