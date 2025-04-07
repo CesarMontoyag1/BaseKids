@@ -225,7 +225,7 @@
     <button class="back-button">
       <img src="img/Volver.png" alt="Atrás">
     </button>
-    <span>Buscar Estudiante</span>
+    <span>Agregar Estudiante</span>
   </div>
   <div class="header-right">
     <button><img src="img/CampanaSinNotificacion.png" alt="Notificación"></button>
@@ -395,7 +395,7 @@
         <input type="text" id="proveedor" name="proveedor">
       </div>
     </div>
-    <button onclick="buscarEstudiante()">Buscar</button>
+    <button onclick="agregarEstudiante()">Agregar</button>
   </div>
 </section>
 
@@ -419,52 +419,54 @@
     }
   });
 
-  function buscarEstudiante() {
-    const numDoc = document.getElementById('numDoc').value;
+  function agregarEstudiante() {
+    const estudiante = {
+      numDoc: document.getElementById('numDoc').value,
+      tipoDoc: document.getElementById('tipoDoc').value,
+      primerNombre: document.getElementById('primerNombre').value,
+      segundoNombre: document.getElementById('segundoNombre').value,
+      primerApellido: document.getElementById('primerApellido').value,
+      segundoApellido: document.getElementById('segundoApellido').value,
+      genero: document.querySelector('input[name="genero"]:checked').value,
+      fechaNacimiento: document.getElementById('fechaNacimiento').value,
+      estadoCivil: document.getElementById('estadoCivil').value,
+      grupoEtnico: document.getElementById('grupoEtnico').value,
+      factorVulnerabilidad: document.getElementById('factorVulnerabilidad').value,
+      paisNacimiento: document.getElementById('paisNacimiento').value,
+      municipioNacimiento: document.getElementById('municipioNacimiento').value,
+      municipioResidencia: document.getElementById('municipioResidencia').value,
+      direccionResidencia: document.getElementById('direccionResidencia').value,
+      zonaEstudiante: document.getElementById('zonaEstudiante').value,
+      mundo: document.getElementById('mundo').value,
+      modalidad: document.getElementById('modalidad').value,
+      dias: document.getElementById('dias').value,
+      horarioInicio: document.getElementById('horarioInicio').value,
+      horarioFin: document.getElementById('horarioFin').value,
+      codigoDaneIE: document.getElementById('codigoDaneIE').value,
+      subregionIE: document.getElementById('subregionIE').value,
+      municipioIE: document.getElementById('municipioIE').value,
+      institucionEducativa: document.getElementById('institucionEducativa').value,
+      codigoDaneSede: document.getElementById('codigoDaneSede').value,
+      sede: document.getElementById('sede').value,
+      grado: document.getElementById('grado').value,
+      jornada: document.getElementById('jornada').value,
+      nit: document.getElementById('nit').value,
+      proveedor: document.getElementById('proveedor').value
+    };
 
-    fetch('/buscarEstudiante', {
+    fetch('/agregarEstudiante', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ numDoc })
+      body: JSON.stringify(estudiante)
     })
             .then(response => response.json())
             .then(data => {
-              if (data) {
-                // Rellenar los campos del formulario con los datos del estudiante
-                document.getElementById('tipoDoc').value = data.tipoDoc;
-                document.getElementById('primerNombre').value = data.primerNombre;
-                document.getElementById('segundoNombre').value = data.segundoNombre;
-                document.getElementById('primerApellido').value = data.primerApellido;
-                document.getElementById('segundoApellido').value = data.segundoApellido;
-                document.querySelector(`input[name="genero"][value="${data.genero}"]`).checked = true;
-                document.getElementById('fechaNacimiento').value = data.fechaNacimiento;
-                document.getElementById('estadoCivil').value = data.estadoCivil;
-                document.getElementById('grupoEtnico').value = data.grupoEtnico;
-                document.getElementById('factorVulnerabilidad').value = data.factorVulnerabilidad;
-                document.getElementById('paisNacimiento').value = data.paisNacimiento;
-                document.getElementById('municipioNacimiento').value = data.municipioNacimiento;
-                document.getElementById('municipioResidencia').value = data.municipioResidencia;
-                document.getElementById('direccionResidencia').value = data.direccionResidencia;
-                document.getElementById('zonaEstudiante').value = data.zonaEstudiante;
-                document.getElementById('mundo').value = data.mundo;
-                document.getElementById('modalidad').value = data.modalidad;
-                document.getElementById('dias').value = data.dias;
-                document.getElementById('horarioInicio').value = data.horarioInicio;
-                document.getElementById('horarioFin').value = data.horarioFin;
-                document.getElementById('codigoDaneIE').value = data.codigoDaneIE;
-                document.getElementById('subregionIE').value = data.subregionIE;
-                document.getElementById('municipioIE').value = data.municipioIE;
-                document.getElementById('institucionEducativa').value = data.institucionEducativa;
-                document.getElementById('codigoDaneSede').value = data.codigoDaneSede;
-                document.getElementById('sede').value = data.sede;
-                document.getElementById('grado').value = data.grado;
-                document.getElementById('jornada').value = data.jornada;
-                document.getElementById('nit').value = data.nit;
-                document.getElementById('proveedor').value = data.proveedor;
+              if (data.success) {
+                alert('Estudiante agregado exitosamente');
               } else {
-                alert('Estudiante no encontrado');
+                alert('Error al agregar estudiante');
               }
             })
             .catch(error => console.error('Error:', error));

@@ -115,7 +115,7 @@ app.post('/agregarEstudiante', (req, res) => {
         sede, grado, jornada, nit, proveedor
     ], (err, results) => {
         if (err) {
-            console.error('Error executing query:', err);
+            console.error('Error ejecutando la consulta:', err);
             return res.status(500).json({ success: false, message: 'Error interno del servidor' });
         }
         res.json({ success: true, message: 'Estudiante agregado exitosamente' });
