@@ -17,8 +17,8 @@ app.use(bodyParser.json());
 const db = mysql.createConnection({
     host: '127.0.0.1',
     user: 'root',
-    password: 'Marien_06',
-    database: 'BaseDatosFundacion',
+    password: 'proyectojames',
+    database: 'basedatosfundacion',
     port: 3306
 });
 
@@ -115,7 +115,7 @@ app.post('/agregarEstudiante', (req, res) => {
         sede, grado, jornada, nit, proveedor
     ], (err, results) => {
         if (err) {
-            console.error('Error ejecutando la consulta:', err);
+            console.error('Error executing query:', err);
             return res.status(500).json({ success: false, message: 'Error interno del servidor' });
         }
         res.json({ success: true, message: 'Estudiante agregado exitosamente' });
@@ -266,9 +266,86 @@ app.post('/buscarUsuario', (req, res) => {
     });
 });
 
+// Ruta para obtener estudiantes por institución
+app.post('/obtenerEstudiantesPorInstitucion', (req, res) => {
+    const { institucion } = req.body;
+    const sql = `
+    SELECT numDoc, tipoDoc, primerNombre, segundoNombre, primerApellido, segundoApellido
+    FROM estudiantes
+    WHERE InstitucionEducativa = ?
+    `;
+    console.log("Institución recibida:", institucion);
+    db.query(sql, [institucion], (err, results) => {
+      if (err) {
+        console.error('Error al obtener estudiantes:', err);
+        return res.status(500).json({ error: 'Error en la base de datos' });
+      }
+      res.json(results);
+    });
+  });
+  
+  // Ruta para registrar asistencia
+app.post('/registrarAsistencia', (req, res) => {
+    const { fecha, institucion, asistencias } = req.body;
+  
+    if (!fecha || !institucion || !Array.isArray(asistencias) || asistencias.length === 0) {
+      return res.status(400).json({ error: 'Datos incompletos' });
+    }
+  
+    // 1. Insertar registro en la tabla "asistencia"
+    const sqlAsistencia = 'INSERT INTO asistencia (institucionEducativa, fechaAsistencia, Usuario_numDoc, Usuario_tipoDoc) VALUES (?, ?, ?, ?)';
+    const asistenciaValues = [institucion, fecha, "123456789", "CC"];
+  
+    db.query(sqlAsistencia, asistenciaValues, (err, result) => {
+      if (err) {
+        console.error('Error al guardar asistencia principal:', err);
+        return res.status(500).json({ error: 'Error al guardar la asistencia principal' });
+      }
+  
+      // Obtiene el idAsistencia generado
+      const idAsistencia = result.insertId;
+  
+      // 2. Preparar los valores a insertar en la tabla "asistencia_has_estudiantes".
+      const valoresHasEstudiante = asistencias.map(item => [
+        idAsistencia,
+        item.numDoc,
+        item.tipoDoc,
+        item.asistio ? 1 : 0
+      ]);
+  
+      const sqlHasEstudiante = 'INSERT INTO asistencia_has_estudiantes (Asistencia_idAsistencia, Estudiantes_numDoc, Estudiantes_tipoDoc, asistio) VALUES ?';
+  
+      db.query(sqlHasEstudiante, [valoresHasEstudiante], (err2, result2) => {
+        if (err2) {
+          console.error('Error al guardar asistencia_has_estudiantes:', err2);
+          return res.status(500).json({ error: 'Error al guardar los registros de asistencia de estudiantes' });
+        }
+        res.json({ mensaje: 'Asistencia registrada correctamente' });
+      });
+    });
+  });
+  
+  app.post('/consultarAsistencia', (req, res) => {
+    const { fecha, institucion } = req.body;
+  
+    const sql = `
+      SELECT e.numDoc, e.primerNombre, e.segundoNombre, e.primerApellido, e.segundoApellido, ahe.asistio
+      FROM asistencia a
+      JOIN asistencia_has_estudiantes ahe ON a.idAsistencia = ahe.Asistencia_idAsistencia
+      JOIN estudiantes e ON ahe.Estudiantes_numDoc = e.numDoc
+      WHERE a.fechaAsistencia = ? AND a.institucionEducativa = ?
+    `;
+    
+    db.query(sql, [fecha, institucion], (err, results) => {
+      if (err) {
+        console.error('Error al consultar asistencia:', err);
+        return res.status(500).json({ error: 'Error en la consulta' });
+      }
+      res.json(results);
+    });
+  });
+  
+
 app.listen(3000, () => {
     console.log("Servidor corriendo en http://localhost:3000/inicio.html");
-});
-app.listen(3000, () => {
-    console.log('Server is running on port 3000');
 });
