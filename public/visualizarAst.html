@@ -212,16 +212,40 @@
     function buscarAsistencia() {
         const fecha = document.getElementById('fecha').value;
         const institucion = document.getElementById('institucion').value;
-        // Aquí puedes agregar la lógica para buscar la asistencia
-        // y mostrar los resultados en el div con id "resultados".
-        const resultadosDiv = document.getElementById('resultados');
-        resultadosDiv.innerHTML = `<p>Resultados para la fecha: ${fecha} y la institución: ${institucion}</p>`;
-        // Ejemplo de resultados (reemplaza con tu lógica):
-        resultadosDiv.innerHTML += `
-                <p>Estudiante 1: Presente</p>
-                <p>Estudiante 2: Ausente</p>
-                <p>Estudiante 3: Presente</p>
-            `;
+        
+        if (!fecha || !institucion) {
+            alert('Por favor ingresa fecha e institución.');
+            return;
+        }
+        
+        fetch('/consultarAsistencia', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ fecha, institucion })
+        })
+        .then(response => response.json())
+        .then(results => {
+            const resultadosDiv = document.getElementById('resultados');
+            resultadosDiv.innerHTML = ''; // Limpiar resultados previos
+            
+            if (results.length === 0) {
+                resultadosDiv.innerHTML = '<p>No se encontraron registros para la fecha e institución indicadas.</p>';
+            } else {
+                // Iteramos sobre cada registro y los mostramos en una lista
+                results.forEach(item => {
+                    resultadosDiv.innerHTML += `
+                      <p>
+                        Estudiante: ${item.primerNombre} ${item.segundoNombre || ''} ${item.primerApellido} ${item.segundoApellido} -
+                        ${item.asistio == 1 ? '<span style="color:#4caf50;">Presente</span>' : '<span style="color:#f44336;">Ausente</span>'}
+                      </p>
+                    `;
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Error al consultar asistencia:', error);
+            document.getElementById('resultados').innerHTML = '<p>Error al consultar la asistencia</p>';
+        });
     }
 </script>
 </body>

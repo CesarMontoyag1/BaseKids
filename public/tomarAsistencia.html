@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tomar Asistencia - BaseKids</title>
   <style>
+    /* Tus estilos originales */
     body {
       font-family: sans-serif;
       margin: 0;
@@ -17,7 +18,6 @@
       align-items: center;
       height: 100vh;
     }
-
     header {
       background: transparent;
       color: white;
@@ -28,45 +28,38 @@
       align-items: center;
       height: 60px;
     }
-
     .header-left {
       display: flex;
       align-items: center;
       font-size: 24px;
       font-weight: bold;
     }
-
     .header-left span {
       font-size: 32px;
       margin-left: 25px;
     }
-
     .header-left img {
       width: 20px;
       margin-right: 10px;
     }
-
     .header-right {
       display: flex;
       align-items: center;
       position: relative;
       margin-bottom: 20px;
     }
-
     .header-right button {
       background-color: transparent;
       border: none;
       cursor: pointer;
       margin-right: 20px;
     }
-
     .header-right button img {
       width: 24px;
       height: 24px;
       position: relative;
       left: 10px;
     }
-
     .header-right button.usuario {
       border: 2px solid white;
       padding: 10px 20px;
@@ -74,7 +67,6 @@
       color: white;
       position: relative;
     }
-
     .dropdown {
       display: none;
       position: absolute;
@@ -86,18 +78,15 @@
       box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
       z-index: 1;
     }
-
     .dropdown a {
       color: black;
       padding: 12px 16px;
       text-decoration: none;
       display: block;
     }
-
     .dropdown a:hover {
       background-color: #ddd;
     }
-
     .divider {
       width: 100%;
       height: 2px;
@@ -107,7 +96,6 @@
       left: 0;
       z-index: 1;
     }
-
     .main-content {
       flex: 1;
       display: flex;
@@ -117,36 +105,31 @@
       width: 100%;
       padding-top: 20px;
     }
-
     .search-container {
       background-color: rgba(255, 255, 255, 0.2);
       border-radius: 10px;
       padding: 20px;
       width: 80%;
-      max-width: 600px;
+      max-width: 450px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 20px;
     }
-
     .search-container div {
       display: flex;
       flex-direction: column;
       width: 20%;
-      margin-right: 20px; /* Añade margen derecho para separar los recuadros */
+      margin-right: 20px;
     }
-
     .search-container div:last-child {
-      margin-right: 0; /* Elimina el margen derecho del último elemento */
+      margin-right: 0;
     }
-
     .search-container label {
       margin-bottom: 5px;
       color: white;
       font-weight: bold;
     }
-
     .search-container input[type="date"],
     .search-container select {
       width: 100%;
@@ -156,7 +139,6 @@
       box-sizing: border-box;
       color: black;
     }
-
     .search-container button {
       background-color: #004aad;
       color: white;
@@ -165,14 +147,12 @@
       border-radius: 5px;
       cursor: pointer;
     }
-
     .logo {
       position: absolute;
       bottom: 10px;
       left: 10px;
       width: 150px;
     }
-
     .back-button {
       background: transparent;
       border: none;
@@ -180,7 +160,6 @@
       padding: 0;
       font-size: 20px;
     }
-
     .back-button img {
       width: 40px;
       margin-right: 0px;
@@ -223,25 +202,6 @@
         <option value="institucion2">Institución 2</option>
       </select>
     </div>
-    <div>
-      <label for="modalidad">Modalidad</label>
-      <select id="modalidad">
-        <option value="">Seleccionar Modalidad</option>
-        <option value="modalidad1">Modalidad 1</option>
-        <option value="modalidad2">Modalidad 2</option>
-      </select>
-    </div>
-    <div>
-      <label for="dias">Días</label>
-      <select id="dias">
-        <option value="">Seleccionar Días</option>
-        <option value="lunes">Lunes</option>
-        <option value="martes">Martes</option>
-        <option value="miercoles">Miércoles</option>
-        <option value="jueves">Jueves</option>
-        <option value="viernes">Viernes</option>
-      </select>
-    </div>
     <button onclick="buscarAsistencia()">Buscar</button>
   </div>
 </section>
@@ -251,11 +211,7 @@
 <script>
   function toggleDropdown() {
     var dropdown = document.getElementById('dropdownMenu');
-    if (dropdown.style.display === 'block') {
-      dropdown.style.display = 'none';
-    } else {
-      dropdown.style.display = 'block';
-    }
+    dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
   }
 
   document.addEventListener('click', function(event) {
@@ -266,15 +222,88 @@
     }
   });
 
+  // Función para buscar estudiantes
   function buscarAsistencia() {
-    const fecha = document.getElementById('fecha').value;
     const institucion = document.getElementById('institucion').value;
-    const modalidad = document.getElementById('modalidad').value;
-    const dias = document.getElementById('dias').value;
-    // Aquí puedes agregar la lógica para buscar la asistencia
-    // con los criterios seleccionados.
-    alert(`Buscando asistencia para Fecha: ${fecha}, Institución: ${institucion}, Modalidad: ${modalidad}, Días: ${dias}`);
+    const fecha = document.getElementById('fecha').value;
+    
+    if (!institucion || !fecha) {
+      alert('Por favor ingresa fecha e institución.');
+      return;
+    }
+    
+    fetch('/obtenerEstudiantesPorInstitucion', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ institucion })
+    })
+    .then(response => response.json())
+    .then(data => mostrarEstudiantes(data, fecha, institucion))
+    .catch(error => {
+      console.error('Error al obtener estudiantes:', error);
+      alert('No se pudo obtener la lista de estudiantes');
+    });
   }
+
+  // Función para mostrar estudiantes y el botón de guardar asistencia
+  function mostrarEstudiantes(estudiantes, fecha, institucion) {
+    // Elimina contenedor previo si existe
+    const anterior = document.getElementById('estudiantes-container');
+    if (anterior) anterior.remove();
+
+    const container = document.createElement('div');
+    container.id = 'estudiantes-container';
+    container.style.marginTop = '20px';
+
+    if(estudiantes.length === 0) {
+      container.innerHTML = '<p>No se encontraron estudiantes en esta institución.</p>';
+    } else {
+      estudiantes.forEach(est => {
+        const div = document.createElement('div');
+        div.innerHTML = `
+          <label>
+            <input type="checkbox" data-numdoc="${est.numDoc}" data-tipodoc="${est.tipoDoc}">
+            ${est.primerNombre} ${est.segundoNombre || ''} ${est.primerApellido} ${est.segundoApellido}
+          </label>
+        `;
+        container.appendChild(div);
+      });
+      // Botón para guardar asistencia
+      const botonGuardar = document.createElement('button');
+      botonGuardar.textContent = 'Guardar Asistencia';
+      botonGuardar.style.marginTop = '20px';
+      botonGuardar.onclick = () => guardarAsistencia(fecha, institucion);
+      container.appendChild(botonGuardar);
+    }
+    document.querySelector('.main-content').appendChild(container);
+  }
+  
+  // Función para guardar la asistencia
+function guardarAsistencia(fecha, institucion) {
+  const checkboxes = document.querySelectorAll('#estudiantes-container input[type="checkbox"]');
+  
+  // Preparamos el arreglo de asistencias, incluyendo el tipoDoc
+  const asistencias = Array.from(checkboxes).map(cb => ({
+    numDoc: cb.dataset.numdoc,
+    tipoDoc: cb.dataset.tipodoc,
+    asistio: cb.checked
+  }));
+
+  fetch('/registrarAsistencia', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ fecha, institucion, asistencias })
+  })
+  .then(res => res.json())
+  .then(data => {
+    alert(data.mensaje || 'Asistencia guardada');
+  })
+  .catch(err => {
+    console.error('Error al guardar asistencia:', err);
+    alert('Error al guardar la asistencia');
+  });
+}
+
 </script>
 </body>
 </html>
